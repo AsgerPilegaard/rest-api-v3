@@ -38,7 +38,11 @@ public class Owner {
     }
 
     public String getSocialSecurityNumber() {
-        return socialSecurityNumber;
+        if (new Random().nextBoolean()) {
+            return "valid";
+        } else {
+            return "invalid";
+        }
     }
 
     public void setSocialSecurityNumber(String socialSecurityNumber) {
