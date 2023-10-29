@@ -3,17 +3,13 @@ package com.example.restservice.controller;
 import com.example.restservice.data.Company;
 import com.example.restservice.data.CompanyRepository;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @PreAuthorize("hasAuthority('ROLE_USER')")
 @RequestMapping("/companies")
 public class CompanyController {
 
-    private Company dummyCompany = new Company("companyName", "Denmark", "12345678");
     private CompanyRepository repository;
 
     CompanyController(CompanyRepository repository) {
@@ -30,20 +26,28 @@ public class CompanyController {
         return repository.findByCompanyName(companyName);
     }
 
-    @GetMapping("/add")
-    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
-    public Company add() {
-        repository.findByCompanyName(dummyCompany.getCompanyName());
-        return repository.save(dummyCompany);
+    @PostMapping("/add")
+    public Company add(@RequestBody Company company) {
+        Company existingCompany = repository.findByCompanyName(company.getCompanyName());
+        if(existingCompany != null) {
+            throw new ObjectAlreadyExistsException();
+        }
+        return repository.save(company);
     }
 
-    @GetMapping("/update")
+    @PutMapping("/update")
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
-    public Company update() {
-        return repository.save(dummyCompany);
+    public Company update(@RequestBody Company company) {
+        Company updatedCompany = repository.findByCompanyName(company.getCompanyName());
+        if(updatedCompany == null) {
+            throw new NotFoundException();
+        }
+        company.setCountry(company.getCountry());
+        company.setPhoneNumber(company.getPhoneNumber());
+        return repository.save(updatedCompany);
     }
 
-    @GetMapping("/delete/{companyName}")
+    @DeleteMapping("/delete/{companyName}")
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     public void delete(@PathVariable String companyName) {
         Company company = repository.findByCompanyName(companyName);

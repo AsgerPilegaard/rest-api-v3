@@ -3,10 +3,8 @@ package com.example.restservice.controller;
 import com.example.restservice.data.Owner;
 import com.example.restservice.data.OwnerRepository;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
 import java.util.Arrays;
 
 @RestController
@@ -14,7 +12,6 @@ import java.util.Arrays;
 @RequestMapping("/owners")
 public class OwnersController {
 
-    private Owner dummyOwner = new Owner("foo", "123");
     private OwnerRepository repository;
 
     OwnersController(OwnerRepository repository) {
@@ -36,18 +33,16 @@ public class OwnersController {
         return repository.findByName(name);
     }
 
-    @GetMapping("/add")
-    public Owner add() {
-        repository.findByName(dummyOwner.getName());
-        return repository.save(dummyOwner);
+    @PostMapping("/add")
+    public Owner add(@RequestBody Owner owner) {
+        Owner existingOwner = repository.findByName(owner.getName());
+        if(existingOwner != null) {
+            throw new ObjectAlreadyExistsException();
+        }
+        return repository.save(owner);
     }
 
-    @GetMapping("/update")
-    public Owner update() {
-        return repository.save(dummyOwner);
-    }
-
-    @GetMapping("/delete/{name}")
+    @DeleteMapping("/delete/{name}")
     public void delete(@PathVariable String name) {
         Owner owner = repository.findByName(name);
         repository.delete(owner);
