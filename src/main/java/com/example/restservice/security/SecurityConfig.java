@@ -38,13 +38,16 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http.csrf().disable()
                 .authorizeHttpRequests()
-                .requestMatchers("/company/welcome").permitAll()
+                .requestMatchers("/companies/**")
+                .authenticated()
                 .and()
-                .authorizeHttpRequests().requestMatchers("/companies/**").authenticated()
+                .authorizeHttpRequests()
+                .requestMatchers("/owners/**")
+                .authenticated()
                 .and()
-                .authorizeHttpRequests().requestMatchers("/owners/**").authenticated()
-                .and().httpBasic()
-                .and().build();
+                .httpBasic()
+                .and()
+                .build();
     }
 
     @Bean

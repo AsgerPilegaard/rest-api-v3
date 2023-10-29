@@ -1,50 +1,44 @@
 package com.example.restservice.controller;
 
+import com.example.restservice.controller.httpexceptions.ObjectAlreadyExistsException;
 import com.example.restservice.data.Owner;
 import com.example.restservice.data.OwnerRepository;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-
-import java.util.Arrays;
 
 @RestController
 @PreAuthorize("hasAuthority('ROLE_ADMIN')")
 @RequestMapping("/owners")
 public class OwnersController {
 
-    private OwnerRepository repository;
+    private OwnerRepository ownerRepository;
 
     OwnersController(OwnerRepository repository) {
-        this.repository = repository;
+        this.ownerRepository = repository;
     }
 
     @GetMapping("/list")
     public Iterable<Owner> list() {
-        return repository.findAll();
-    }
-
-    @GetMapping("/company/{companyName}")
-    public Iterable<Owner> listOwnersOfCompany(@PathVariable String companyName) {
-        return Arrays.asList();
+        return ownerRepository.findAll();
     }
 
     @GetMapping("/get/{name}")
     public Owner get(@PathVariable String name) {
-        return repository.findByName(name);
+        return ownerRepository.findByName(name);
     }
 
     @PostMapping("/add")
     public Owner add(@RequestBody Owner owner) {
-        Owner existingOwner = repository.findByName(owner.getName());
+        Owner existingOwner = ownerRepository.findByName(owner.getName());
         if(existingOwner != null) {
             throw new ObjectAlreadyExistsException();
         }
-        return repository.save(owner);
+        return ownerRepository.save(owner);
     }
 
     @DeleteMapping("/delete/{name}")
     public void delete(@PathVariable String name) {
-        Owner owner = repository.findByName(name);
-        repository.delete(owner);
+        Owner owner = ownerRepository.findByName(name);
+        ownerRepository.delete(owner);
     }
 }

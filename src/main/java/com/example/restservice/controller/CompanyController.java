@@ -1,5 +1,7 @@
 package com.example.restservice.controller;
 
+import com.example.restservice.controller.httpexceptions.NotFoundException;
+import com.example.restservice.controller.httpexceptions.ObjectAlreadyExistsException;
 import com.example.restservice.data.Company;
 import com.example.restservice.data.CompanyRepository;
 import org.springframework.security.access.prepost.PreAuthorize;
