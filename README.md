@@ -17,9 +17,10 @@ docker run -p 8080:8080 spring-rest-api
 
 Query the now live API
 ```
-curl -u "user:123" http://localhost:8080/company/list --verbose
-curl -u "user:123" http://localhost:8080/company/delete --verbose
-curl -u "admin:123" http://localhost:8080/company/delete --verbose
+curl -u "user:123" http://localhost:8080/companies/list
+curl -u "user:123" http://localhost:8080/companies/delete/company1 --verbose
+curl -u "admin:123" http://localhost:8080/companies/delete/company1 --verbose
+curl -u "user:123" http://localhost:8080/companies/list
 ```
 
 

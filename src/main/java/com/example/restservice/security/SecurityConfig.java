@@ -1,4 +1,4 @@
-package com.example.restservice.controller;
+package com.example.restservice.security;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -18,17 +18,15 @@ import org.springframework.security.web.SecurityFilterChain;
 @EnableMethodSecurity
 public class SecurityConfig {
 
-    // User Creation
     @Bean
     public UserDetailsService userDetailsService(PasswordEncoder encoder) {
 
-        // InMemoryUserDetailsManager
-        UserDetails admin = User.withUsername("Amiya")
+        UserDetails admin = User.withUsername("admin")
                 .password(encoder.encode("123"))
                 .roles("ADMIN", "USER")
                 .build();
 
-        UserDetails user = User.withUsername("Ejaz")
+        UserDetails user = User.withUsername("user")
                 .password(encoder.encode("123"))
                 .roles("USER")
                 .build();
@@ -36,21 +34,19 @@ public class SecurityConfig {
         return new InMemoryUserDetailsManager(admin, user);
     }
 
-    // Configuring HttpSecurity
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http.csrf().disable()
                 .authorizeHttpRequests()
-                .requestMatchers("/auth/welcome").permitAll()
+                .requestMatchers("/company/welcome").permitAll()
                 .and()
-                .authorizeHttpRequests().requestMatchers("/auth/user/**").authenticated()
+                .authorizeHttpRequests().requestMatchers("/companies/**").authenticated()
                 .and()
-                .authorizeHttpRequests().requestMatchers("/auth/admin/**").authenticated()
+                .authorizeHttpRequests().requestMatchers("/owners/**").authenticated()
                 .and().httpBasic()
                 .and().build();
     }
 
-    // Password Encoding
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
