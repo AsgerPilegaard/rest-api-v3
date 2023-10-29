@@ -17,13 +17,16 @@ docker run -p 8080:8080 spring-rest-api
 
 Query the now live API
 ```
-curl "http://localhost:8080/public" -u "user:password" --verbose
-curl -d username=admin -d password=password -L "http://localhost:8080/public"
-curl "http://localhost:8080/delete" -u "admin:password" --verbose
+curl -u "user:123" http://localhost:8080/company/list --verbose
+curl -u "user:123" http://localhost:8080/company/delete --verbose
+curl -u "admin:123" http://localhost:8080/company/delete --verbose
 ```
 
 
 References
+https://www.baeldung.com/spring-security-basic-authentication
+
+
 https://howtodoinjava.com/spring-boot2/security-rest-basic-auth-example/
 https://github.com/lokeshgupta1981/Spring-security/tree/master/Spring-security-with-spring-boot
 
@@ -58,3 +61,8 @@ securing web app:
 https://spring.io/guides/gs/securing-web/
 Basic Auth Sping Boot:
 https://chanakambkarunarathna.medium.com/basic-authentication-for-springboot-rest-api-application-with-handlerinterceptor-3e2cc4480b9c
+
+Amiya
+https://www.geeksforgeeks.org/authentication-and-authorization-in-spring-boot-3-0-with-spring-security/
+
+https://dzone.com/articles/securing-spring-data-rest-with-preauthorize
